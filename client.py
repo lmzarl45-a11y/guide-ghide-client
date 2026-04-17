@@ -18,53 +18,71 @@ except Exception as e:
     st.error(f"❌ Mochkil f l-Ittisal b Google wla mal9itch l-fichier f Drive: {e}")
     st.stop()
 
-# --- 2. L-INTERFACE DYAL L-APPLICATION (DESIGN PREMIUM) ---
+# --- 2. L-INTERFACE DYAL L-APPLICATION (DESIGN ANIMÉ & PREMIUM) ---
 st.set_page_config(page_title="Inscription - Centre ae", page_icon="🎓", layout="centered")
 
-# CSS jdid bach y-rddha professionnelle
+# CSS jdid m3a TSWIRA w ANIMATION (Glassmorphism)
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
     
-    /* L-Khalfia w l-khat */
+    /* 1. L-KHALFIA (BACKGROUND) B TSWIRA W ANIMATION */
+    .stApp {
+        /* Hna drna tswira + wahed l-kholassa zr9a gham9a (overlay) bach l-ktaba tban mzyan */
+        background-image: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), url("https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        /* L-Animation smitha moveBackground w kat-t3awed dima */
+        animation: moveBackground 25s linear infinite alternate;
+    }
+
+    /* 2. L-ANIMATION DYAL TSWIRA (Kat-t7rek chwiya dima) */
+    @keyframes moveBackground {
+        0% { background-position: left bottom; }
+        100% { background-position: right top; }
+    }
+
     html, body, [class*="css"] {
         font-family: 'Inter', sans-serif;
-        background-color: #0f172a; /* Zre9 gham9 bzaf */
         color: #f8fafc;
     }
 
-    /* L-Fou9aniya (Header) */
+    /* L-Fou9aniya (Header) - rddinaha transparent b Glassmorphism */
     .main-header { 
-        background: linear-gradient(135deg, #1e3a8a 0%, #d4af37 100%); /* Zre9 l D-hbi */
+        background: linear-gradient(135deg, rgba(30, 58, 138, 0.85) 0%, rgba(212, 175, 55, 0.85) 100%); 
         padding: 40px 20px; 
         border-radius: 15px; 
         text-align: center; 
         color: white; 
         margin-bottom: 30px;
+        backdrop-filter: blur(10px); /* Kay-dbbeb tswira l-lor */
+        border: 1px solid rgba(255,255,255,0.1);
         box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
     }
     .main-header h1 { font-weight: 800; font-size: 2.2rem; margin-bottom: 10px; }
     .main-header p { font-size: 1.1rem; opacity: 0.9; }
 
-    /* L-Mrb3 dyal l-formulaire */
+    /* L-Mrb3 dyal l-formulaire (Transparent b ddel) */
     [data-testid="stForm"] {
-        background-color: #1e293b;
+        background-color: rgba(30, 41, 59, 0.65); /* Chwiya transparent */
+        backdrop-filter: blur(12px); /* Zlaj m-dbbeb */
         padding: 30px;
         border-radius: 15px;
-        border: 1px solid #334155;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
-    /* L-Blayes fin kay-khedmo (Inputs) */
+    /* L-Blayes fin kay-khedmo t-talamid (Inputs) */
     .stTextInput>div>div>input {
-        background-color: #0f172a;
+        background-color: rgba(15, 23, 42, 0.7);
         color: white;
-        border: 1px solid #334155;
+        border: 1px solid rgba(255,255,255,0.2);
         border-radius: 8px;
         padding: 12px;
     }
     .stTextInput>div>div>input:focus {
-        border-color: #d4af37; /* L-Cadre kay-weli d-hbi mnin t-ktab */
+        border-color: #d4af37;
         box-shadow: 0 0 0 1px #d4af37;
     }
 
@@ -90,7 +108,6 @@ st.markdown("""
         color: white;
     }
 
-    /* Ktaba dyal Labels */
     .stTextInput label {
         font-weight: 600;
         color: #cbd5e1;
