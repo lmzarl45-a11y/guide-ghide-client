@@ -2,22 +2,18 @@ import streamlit as st
 import gspread
 from google.oauth2.service_account import Credentials
 from datetime import datetime
+import json
 
 # --- CONFIGURATION GOOGLE SHEETS ---
 scope = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
 
 try:
-    # njbdou s-sarout mn st.secrets
-    creds_dict = dict(st.secrets["gcp_service_account"])
-    
-    # 💡 HADA HOWA S-STER LI ZEDNA BACH N-7ELLOU L-MOCHKIL:
-    # kay-bdel \n l-mktouba b rjou3 l-ster 7a9i9i bach Google t-9blou
-    creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
-    
+    # njbdou s-sarout b tari9a s7i7a 100% mn JSON
+    creds_dict = json.loads(st.secrets["gcp_service_account_json"])
     creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
     client = gspread.authorize(creds)
 except Exception as e:
-    st.error(f"❌ Mochkil f l'ittisal m3a Google. T2kd bli 9additi 'Secrets' f Streamlit: {e}")
+    st.error(f"❌ Mochkil f l'ittisal m3a Google. T2kd bli 9additi 'Secrets': {e}")
     st.stop()
 
 # 7el l-fichier Google Sheets b s-mmiyto
