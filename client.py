@@ -1,23 +1,21 @@
+import json
 import streamlit as st
 import gspread
 from google.oauth2.service_account import Credentials
 from datetime import datetime
 
-# --- CONFIGURATION GOOGLE SHEETS ---
+# --- 1. L-ITTISAL M3A GOOGLE SHEETS ---
 scope = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
 
 try:
-    # 1. N-jbdou l-ma3loumat mn st.secrets
-    creds_dict = dict(st.secrets["gcp_service_account"])
+    # N-jbdou JSON kima howa mn st.secrets bla ma Streamlit y-kherbe9 fih
+    creds_dict = json.loads(st.secrets["google_credentials"])
     
-    # 2. Hada howa s-ster s-si7ri li kay-rigel s-sarout 
-    creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
-    
-    # 3. N-diro l-Ittisal m3a Google API
+    # N-diro l-Ittisal b Google
     creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
     client = gspread.authorize(creds)
     
-    # 4. N-7ellou l-fichier Excel
+    # N-7ellou l-fichier Excel
     SHEET_NAME = "Guide_Demandes"
     sheet = client.open(SHEET_NAME).sheet1
     
@@ -25,7 +23,7 @@ except Exception as e:
     st.error(f"❌ Mochkil f l-Ittisal b Google wla mal9itch l-fichier f Drive: {e}")
     st.stop()
 
-# --- INTERFACE ---
+# --- 2. L-INTERFACE DYAL L-APPLICATION ---
 st.set_page_config(page_title="Inscription - Guide Ghide", page_icon="🎓")
 
 st.markdown("""
