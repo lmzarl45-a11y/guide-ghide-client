@@ -17,7 +17,7 @@ except Exception as e:
     st.error(f"❌ Mochkil f l-Ittisal b Google wla mal9itch l-fichier f Drive: {e}")
     st.stop()
 
-# --- 2. L-INTERFACE (ANIMATIONS + CONFIRMATION) ---
+# --- 2. L-INTERFACE (ANIMATIONS + CONFIRMATION + SUCCESS PAGE) ---
 st.set_page_config(page_title="Inscription - Centre ae", page_icon="🎓", layout="centered")
 
 st.markdown("""
@@ -58,7 +58,7 @@ st.markdown("""
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255,255,255,0.1);
         box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-        animation: fadeInUp 0.8s ease-out; /* Dkhla b animation */
+        animation: fadeInUp 0.8s ease-out;
     }
     .main-header h1 { font-weight: 800; font-size: 2.2rem; margin-bottom: 10px; }
     .main-header p { font-size: 1.1rem; opacity: 0.9; }
@@ -71,7 +71,7 @@ st.markdown("""
         border-radius: 15px;
         border: 1px solid rgba(255,255,255,0.1);
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        animation: fadeInUp 1s ease-out 0.2s both; /* Dkhla m3tla chwiya 3la l-header */
+        animation: fadeInUp 1s ease-out 0.2s both;
     }
 
     .stTextInput>div>div>input {
@@ -85,7 +85,7 @@ st.markdown("""
     .stTextInput>div>div>input:focus {
         border-color: #d4af37;
         box-shadow: 0 0 0 1px #d4af37;
-        transform: scale(1.01); /* Animation sghira f l-input */
+        transform: scale(1.01);
     }
 
     /* 3. ANIMATION PULSE L-BOUTONA */
@@ -107,12 +107,12 @@ st.markdown("""
         letter-spacing: 0.5px;
         transition: all 0.3s ease;
         margin-top: 15px;
-        animation: pulseBtn 2s infinite; /* L-Boutona kat-nbed dima */
+        animation: pulseBtn 2s infinite;
     }
     .stButton>button:hover {
         background: linear-gradient(to right, #2563eb, #3b82f6);
         transform: translateY(-3px);
-        animation: none; /* Kat7bess l-pulse mnin t7et 3liha s-souris */
+        animation: none;
         box-shadow: 0 10px 20px -3px rgba(37, 99, 235, 0.5);
     }
 
@@ -120,46 +120,82 @@ st.markdown("""
         font-weight: 600;
         color: #cbd5e1;
     }
+    
+    /* Boutona dyal rjou3 */
+    .btn-retour>button {
+        background: rgba(255,255,255,0.1) !important;
+        animation: none !important;
+        border: 1px solid rgba(255,255,255,0.3) !important;
+        margin-top: 20px;
+    }
+    .btn-retour>button:hover {
+        background: rgba(255,255,255,0.2) !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 
-# --- CONTENU DYAL L-PAGE ---
-st.markdown('''
-    <div class="main-header">
-        <h1>🎓 Centre ae - Orientation</h1>
-        <p>Portail d'inscription officiel pour l'accompagnement post-bac</p>
-    </div>
-''', unsafe_allow_html=True)
+# --- SYSTEME BACH Y-39EL WACH T-SAJJEL WLA MAZAL ---
+if 'is_submitted' not in st.session_state:
+    st.session_state['is_submitted'] = False
 
-with st.form("form_inscription", clear_on_submit=True):
-    st.write("### 📝 Formulaire d'inscription")
-    st.write("Veuillez remplir soigneusement vos informations. L'équipe Guide Ghide vous contactera très prochainement.")
-    st.write("") 
-
-    nom = st.text_input("👤 Nom et Prénom (Smiya w l-Kniya) *")
-    tel = st.text_input("📱 Numéro de téléphone *")
-    gmail = st.text_input("📧 Adresse Email (Gmail) *")
+# =================================================================
+# 1. PAGE DYAL N-NAJA7 (KAT-BAN ILA TSAJJEL)
+# =================================================================
+if st.session_state['is_submitted']:
+    st.markdown('''
+        <div class="main-header" style="margin-top: 100px;">
+            <h1 style="font-size: 5rem; margin-bottom: 10px;">✅</h1>
+            <h1 style="color: #4ade80;">Tbarkellah 3lik!</h1>
+            <p style="font-size: 1.3rem; margin-top: 15px;">Rak tsjelti b naja7.<br>L-fari9 dyalna ghadi ytwasel m3ak 9ariban insha'Allah.</p>
+        </div>
+    ''', unsafe_allow_html=True)
+    st.balloons() # Dakchi dyal nfakhat dyal l-i7tifal
     
-    st.write("---")
-    # --- L-KHASIYA DYAL T-T2KID (CONFIRMATION) ---
-    mt2ked = st.checkbox("✅ Je confirme que mes informations sont correctes (Ana mt2ked mn l-ma3loumat)")
-    
-    submit = st.form_submit_button("Confirmer l'inscription 🚀")
+    # Boutona ila bgha y-rje3 l-formulaire (bach y-sajjel sahbo matalan)
+    st.markdown('<div class="btn-retour">', unsafe_allow_html=True)
+    if st.button("⬅️ Rje3 l-Formulaire d'inscription"):
+        st.session_state['is_submitted'] = False
+        st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
 
-# Mnin kay-wrek 3la Sifet
-if submit:
-    # 1. Kay-t2ked wach 3emmer s-smiya w n-nemra
-    if nom.strip() == "" or tel.strip() == "":
-        st.error("⚠️ 3afak dkhl smiya w n-nemra dyal t-tilifone!")
-    # 2. Kay-t2ked wach wrek 3la l-mrbe3 dyal l-Confirmation
-    elif not mt2ked:
-        st.warning("⚠️ Khassk t-wrek 3la 'Je confirme' (Ana mt2ked) bach t-9der t-sifet t-talab dyalek!")
-    # 3. Kolchi s7i7 -> Kay-sifet l-Excel
-    else:
-        try:
-            date_daba = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            sheet.append_row([nom, tel, gmail, date_daba])
-            st.success(f"🎉 Félicitations {nom} ! Votre demande a été envoyée avec succès. L'administration vous contactera bientôt.")
-            st.balloons()
-        except Exception as e:
-            st.error(f"❌ W9a3 mochkil mnin bghina n-siftou l-ma3loumat: {e}")
+# =================================================================
+# 2. PAGE DYAL L-FORMULAIRE (KAT-BAN F L-LOWEL)
+# =================================================================
+else:
+    st.markdown('''
+        <div class="main-header">
+            <h1>🎓 Centre ae - Orientation</h1>
+            <p>Portail d'inscription officiel pour l'accompagnement post-bac</p>
+        </div>
+    ''', unsafe_allow_html=True)
+
+    with st.form("form_inscription", clear_on_submit=True):
+        st.write("### 📝 Formulaire d'inscription")
+        st.write("Veuillez remplir soigneusement vos informations. L'équipe Guide Ghide vous contactera très prochainement.")
+        st.write("") 
+
+        nom = st.text_input("👤 Nom et Prénom (Smiya w l-Kniya) *")
+        tel = st.text_input("📱 Numéro de téléphone *")
+        gmail = st.text_input("📧 Adresse Email (Gmail) *")
+        
+        st.write("---")
+        mt2ked = st.checkbox("✅ Je confirme que mes informations sont correctes (Ana mt2ked mn l-ma3loumat)")
+        
+        submit = st.form_submit_button("Confirmer l'inscription 🚀")
+
+    if submit:
+        if nom.strip() == "" or tel.strip() == "":
+            st.error("⚠️ 3afak dkhl smiya w n-nemra dyal t-tilifone!")
+        elif not mt2ked:
+            st.warning("⚠️ Khassk t-wrek 3la 'Je confirme' (Ana mt2ked) bach t-9der t-sifet t-talab dyalek!")
+        else:
+            try:
+                date_daba = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                sheet.append_row([nom, tel, gmail, date_daba])
+                
+                # Mnin kydouz l-khatwa dyal Google Sheets mzyan, kan-beddlou l-page!
+                st.session_state['is_submitted'] = True
+                st.rerun()
+                
+            except Exception as e:
+                st.error(f"❌ W9a3 mochkil mnin bghina n-siftou l-ma3loumat: {e}")
