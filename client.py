@@ -6,15 +6,19 @@ from datetime import datetime
 # --- CONFIGURATION GOOGLE SHEETS ---
 scope = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
 
-# Tariqa jdida: N-jbdou ma3loumat mn Streamlit Secrets machi mn l-fichier
 try:
     # njbdou s-sarout mn st.secrets
     creds_dict = dict(st.secrets["gcp_service_account"])
+    
+    # 💡 HADA HOWA S-STER LI ZEDNA BACH N-7ELLOU L-MOCHKIL:
+    # kay-bdel \n l-mktouba b rjou3 l-ster 7a9i9i bach Google t-9blou
+    creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
+    
     creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
     client = gspread.authorize(creds)
 except Exception as e:
     st.error(f"❌ Mochkil f l'ittisal m3a Google. T2kd bli 9additi 'Secrets' f Streamlit: {e}")
-    st.stop() # Kat-7bess l-appli hna ila makaynch l'ittisal
+    st.stop()
 
 # 7el l-fichier Google Sheets b s-mmiyto
 SHEET_NAME = "Guide_Demandes"
@@ -27,7 +31,6 @@ except Exception as e:
 # --- INTERFACE ---
 st.set_page_config(page_title="Inscription - Guide Ghide", page_icon="🎓")
 
-# CSS bach n-ziynou chwiya l-formulaire
 st.markdown("""
     <style>
     .main { background-color: #f8fafc; }
@@ -51,12 +54,8 @@ if submit:
         st.error("⚠️ 3afak dkhl smiya w n-nemra dyal t-tilifone!")
     else:
         try:
-            # Jib l-waqt dyal daba
             date_daba = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            
-            # Zid s-ster f Google Sheets
             sheet.append_row([nom, tel, gmail, date_daba])
-            
             st.success(f"🎉 Tbarkellah {nom}! Demande dyalk tsiftat b naja7. Tsena l-idara t-contactik.")
             st.balloons()
         except Exception as e:
