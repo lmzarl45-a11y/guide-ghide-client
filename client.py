@@ -3,17 +3,34 @@ import gspread
 from google.oauth2.service_account import Credentials
 from datetime import datetime
 import json
+import textwrap
 
 # --- CONFIGURATION GOOGLE SHEETS ---
 scope = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
 
 try:
-    # njbdou s-sarout b tari9a s7i7a 100% mn JSON
+    # N-jbdou JSON mn Secrets
     creds_dict = json.loads(st.secrets["gcp_service_account_json"])
+    
+    # --- L-7EL N-NIHA2I DYAL S-SAROUT (Bulletproof Fix) ---
+    raw_key = creds_dict["private_key"]
+    
+    # 1. N-7iydou l-hwayej zaydin kamlin bach tb9a ghir chifra n9iya
+    body = raw_key.replace("-----BEGIN PRIVATE KEY-----", "").replace("-----END PRIVATE KEY-----", "")
+    body = body.replace(" ", "").replace("\n", "").replace("\\n", "")
+    
+    # 2. N-3awdou n-bniw s-sarout b t-tari9a li kat-bghiha Google (64 7arf f s-ster)
+    proper_body = "\n".join(textwrap.wrap(body, 64))
+    proper_key = f"-----BEGIN PRIVATE KEY-----\n{proper_body}\n-----END PRIVATE KEY-----\n"
+    
+    # 3. N-rj3ou s-sarout l-m9ad l-dictionnaire
+    creds_dict["private_key"] = proper_key
+    # ------------------------------------------------------
+    
     creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
     client = gspread.authorize(creds)
 except Exception as e:
-    st.error(f"❌ Mochkil f l'ittisal m3a Google. T2kd bli 9additi 'Secrets': {e}")
+    st.error(f"❌ Mochkil f l'ittisal m3a Google: {e}")
     st.stop()
 
 # 7el l-fichier Google Sheets b s-mmiyto
